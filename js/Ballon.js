@@ -3,7 +3,7 @@ import * as THREE from 'three' ;
 const loadingManager = new THREE.LoadingManager() ;
 const textureLoader = new THREE.TextureLoader(loadingManager);
 
-const WallTexture = textureLoader.load('wall.jpg');
+const WallTexture = textureLoader.load('./textures/wall.jpg');
 
 
 class Ballon {
@@ -22,7 +22,6 @@ class Ballon {
         const FullBallon = new THREE.Group();
         this.FullBallon = FullBallon ;
         this.Draw() ; 
-        console.log('wtf');
     }
     DrawCabin(){
 
