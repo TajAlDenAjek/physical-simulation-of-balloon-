@@ -13,7 +13,7 @@ document.body.appendChild(renderer.domElement);
 
 camera.position.z = 5;
 const geometry = new THREE.BoxGeometry( 2, 2,2 );
-const material = new THREE.MeshBasicMaterial( { color: 0xfffff0 } );
+const material = new THREE.MeshBasicMaterial( { color: 0xffffff } );
 const cube = new THREE.Mesh( geometry, material );
 scene.add( cube );
 function animate()
