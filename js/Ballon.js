@@ -22,7 +22,6 @@ class Ballon {
         const FullBallon = new THREE.Group();
         this.FullBallon = FullBallon ;
         this.Draw() ; 
-        console.log('wtf');
     }
     DrawCabin(){
 
