@@ -3,8 +3,10 @@ import * as THREE from 'three' ;
 const loadingManager = new THREE.LoadingManager() ;
 const textureLoader = new THREE.TextureLoader(loadingManager);
 
+
 // importing textures 
 const woodTexture = textureLoader.load('../assets/wood.jpg');
+
 
 
 class Ballon
