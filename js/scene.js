@@ -7,12 +7,13 @@ import { ConfigOptions } from './gui'; // importing Configuration
 
 export const scene = new THREE.Scene();
 
-const skybox = new Skybox(scene,800,0.0005);
+const skybox = new Skybox(scene,800,0.0000);
 const ballon = new Ballon(scene , 3 , 3  , 3, 3 ,  3 , 3 , 3 , 'white');
 
 
 export function objectsAnimations()
 {
     skybox.AnimateSkyBox();
+    
+    ballon.AnimateBallon(ConfigOptions) ;
 }
-

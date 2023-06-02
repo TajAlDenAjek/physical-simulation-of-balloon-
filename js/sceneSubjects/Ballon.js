@@ -1,13 +1,67 @@
 import * as THREE from 'three' ; 
 
+
 const loadingManager = new THREE.LoadingManager() ;
 const textureLoader = new THREE.TextureLoader(loadingManager);
 
 
-// importing textures 
+// importing textures
 const woodTexture = textureLoader.load('../assets/wood.jpg');
 
 
+// physics constatns
+let Constants = {
+    PressureAtSeaLevel:101325 ,                                         // P0 , pasal
+    e: Math.E ,                                 
+    GasConstant: 287.1 ,                                                // R  , Kg . K 
+    AverageTempratureAtSeaLevel: 293.35 ,                               // T0 kelvin 
+    Gravity:9.8,                                                        // g , m/s^2
+    MolarMass: 28.97,                                                   // M , g/mol 
+    GravitationalConstant: 6.67 * Math.pow(10 , -11) ,                  // G 
+    MassOfEarth:5.97 * Math.pow(10 , 24)  ,                             // m2 , kg
+    RadiusOfEarth: 6371000 ,                                            // r , meter
+    Dragcoefficient: 0.47
+    
+} ;
+function GravityForce(MassOfBallon , HeightOfBallon ){
+    let F = Constants.GravitationalConstant * Constants.MassOfEarth * MassOfBallon / Math.pow(Constants.RadiusOfEarth+ HeightOfBallon , 2) ; 
+    return F; 
+}
+function AirPressureForce(HeightOfBallon){
+    let ScaleHeight = ( Constants.GasConstant * Constants.AverageTempratureAtSeaLevel ) / (Constants.Gravity * Constants.MolarMass ) ; 
+    let airPressureForce =  Constants.PressureAtSeaLevel * Math.pow( Math.E ,  -HeightOfBallon / ScaleHeight ) ; 
+    console.log(airPressureForce);
+    return airPressureForce ;
+}
+function AirDensity(HeightOfBallon , temprature){
+    let p = AirPressureForce(HeightOfBallon) * Constants.MolarMass / (Constants.GasConstant * temprature) ;
+    return p;
+}
+function BuoyancyForce(TempratureInsideBallon , TempratureOutsideBallon , RadiusOfBallon , HeightOfBallon )
+{
+    let airPressure = AirPressureForce(HeightOfBallon) ; 
+    let p_hot = AirDensity(HeightOfBallon , TempratureInsideBallon);
+    let p_cold = AirDensity(HeightOfBallon , TempratureOutsideBallon) ;
+    let VolumeOfAirInBallon = 4/3 * Math.PI * Math.pow(RadiusOfBallon,3) ; 
+    let buoyancyForce = VolumeOfAirInBallon * Constants.Gravity * (p_hot - p_cold ) ; 
+    
+    return buoyancyForce ; 
+}
+function WindForce(TempratureOutsideBallon , WindVelocity ){
+    let F = 1/2 * AirDensity(TempratureOutsideBallon) * Math.pow( WindVelocity , 2 ) * Constants.Dragcoefficient * Math.PI * Math.pow( RadiusOfBallon , 2 ) ;
+    return F ;
+}
+function Velocity(TempratureInsideBallon , TempratureOutsideBallon , RadiusOfBallon  , MassOfBallon , HeightOfBallon){
+    let airPressure = AirPressureForce(HeightOfBallon) ; 
+    let p_cold = airPressure * Constants.MolarMass / (Constants.GasConstant * TempratureOutsideBallon ) ;
+    let VolumeOfAirInBallon = 4/3 * Math.PI * Math.pow(RadiusOfBallon,3) ; 
+    let velocity = (TempratureInsideBallon - MassOfBallon ) / (VolumeOfAirInBallon * p_cold ) ;
+    return velocity ; 
+}
+function Accelration(BuoyancyForce , GravityForce , MassOfBallon ){ // add wind speed 
+    let accelration = (BuoyancyForce - GravityForce )/MassOfBallon ;
+    return accelration ;
+}
 
 class Ballon
 {
@@ -54,10 +108,22 @@ class Ballon
         this.DrawBallon();
         this.scene.add(this.FullBallon) ;
     }
-    // AnimateBallon(cnt)
-    // {
+    AnimateBallon(ConfigOptions)
+    {
         
-    // }
+        let buoyancyForce = BuoyancyForce(ConfigOptions.Fire , ConfigOptions.AirTemprature , ConfigOptions.Raduis , this.FullBallon.position.y +1 ) ; 
+        let gravityForce = GravityForce(ConfigOptions.Mass , this.FullBallon.position.y +1) ;
+        let velocity = Velocity(ConfigOptions.Fire , ConfigOptions.AirTemprature , ConfigOptions.Raduis , ConfigOptions.Mass , this.FullBallon.position.y +1);
+        
+        if(buoyancyForce > gravityForce ){
+            this.FullBallon.position.y +=  0.5;
+        }
+        else if( buoyancyForce < gravityForce ){
+            if(this.FullBallon.position.y > 0 )
+                this.FullBallon.position.y -= 0.5 ; 
+        }
+    }       
+    
 }
 
 
