@@ -1,4 +1,7 @@
 import * as THREE from 'three' ; 
+import { Material } from 'three';
+import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
+import { FontLoader } from 'three/addons/loaders/FontLoader.js';
 
 
 const loadingManager = new THREE.LoadingManager() ;
@@ -30,7 +33,7 @@ function GravityForce(MassOfBallon , HeightOfBallon ){
 function AirPressureForce(HeightOfBallon){
     let ScaleHeight = ( Constants.GasConstant * Constants.AverageTempratureAtSeaLevel ) / (Constants.Gravity * Constants.MolarMass ) ; 
     let airPressureForce =  Constants.PressureAtSeaLevel * Math.pow( Math.E ,  -HeightOfBallon / ScaleHeight ) ; 
-    console.log(airPressureForce);
+    
     return airPressureForce ;
 }
 function AirDensity(HeightOfBallon , temprature){
@@ -39,11 +42,16 @@ function AirDensity(HeightOfBallon , temprature){
 }
 function BuoyancyForce(TempratureInsideBallon , TempratureOutsideBallon , RadiusOfBallon , HeightOfBallon )
 {
-    let airPressure = AirPressureForce(HeightOfBallon) ; 
-    let p_hot = AirDensity(HeightOfBallon , TempratureInsideBallon);
-    let p_cold = AirDensity(HeightOfBallon , TempratureOutsideBallon) ;
+
     let VolumeOfAirInBallon = 4/3 * Math.PI * Math.pow(RadiusOfBallon,3) ; 
-    let buoyancyForce = VolumeOfAirInBallon * Constants.Gravity * (p_hot - p_cold ) ; 
+    let airPressure = AirPressureForce(HeightOfBallon) ;
+    let buoyancyForce = VolumeOfAirInBallon * airPressure / 2.87 * ( 1 / TempratureOutsideBallon - 1/TempratureInsideBallon ) ;
+    return buoyancyForce ; 
+    // let airPressure = AirPressureForce(HeightOfBallon) ; 
+    // let p_hot = AirDensity(HeightOfBallon , TempratureInsideBallon);
+    // let p_cold = AirDensity(HeightOfBallon , TempratureOutsideBallon) ;
+    // let VolumeOfAirInBallon = 4/3 * Math.PI * Math.pow(RadiusOfBallon,3) ; 
+    // let buoyancyForce = VolumeOfAirInBallon * Constants.Gravity * ( p_cold -  p_hot  ) ; /// changed p_hot - p_cold to this
     
     return buoyancyForce ; 
 }
@@ -79,6 +87,7 @@ class Ballon
         const FullBallon = new THREE.Group();
         this.FullBallon = FullBallon ;
         this.Draw() ; 
+
         
     }
     DrawCabin()
@@ -107,13 +116,22 @@ class Ballon
         this.DrawCabin();
         this.DrawBallon();
         this.scene.add(this.FullBallon) ;
+        this.PrintingValues();
     }
-    AnimateBallon(ConfigOptions)
+    AnimateBallon(ConfigOptions , cnt )
     {
         
         let buoyancyForce = BuoyancyForce(ConfigOptions.Fire , ConfigOptions.AirTemprature , ConfigOptions.Raduis , this.FullBallon.position.y +1 ) ; 
         let gravityForce = GravityForce(ConfigOptions.Mass , this.FullBallon.position.y +1) ;
         let velocity = Velocity(ConfigOptions.Fire , ConfigOptions.AirTemprature , ConfigOptions.Raduis , ConfigOptions.Mass , this.FullBallon.position.y +1);
+
+        // debug
+        if(this.CONFIG.buoyancyForce != ConfigOptions.buoyancyForce ){
+            console.log("bounancy" , buoyancyForce) ;
+            console.log("gravity", gravityForce) ;
+            console.log("velocity", velocity);
+            console.log("height" , this.FullBallon.position.y ) ;
+        }
         
         if(buoyancyForce > gravityForce ){
             this.FullBallon.position.y +=  0.5;
@@ -122,7 +140,7 @@ class Ballon
             if(this.FullBallon.position.y > 0 )
                 this.FullBallon.position.y -= 0.5 ; 
         }
-    }       
+    }
     
 }
 

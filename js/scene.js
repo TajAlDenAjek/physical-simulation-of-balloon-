@@ -11,9 +11,9 @@ const skybox = new Skybox(scene,800,0.0000);
 const ballon = new Ballon(scene , 3 , 3  , 3, 3 ,  3 , 3 , 3 , 'white');
 
 
-export function objectsAnimations()
+export function objectsAnimations(cnt) // cnt for debug
 {
     skybox.AnimateSkyBox();
     
-    ballon.AnimateBallon(ConfigOptions) ;
+    ballon.AnimateBallon(ConfigOptions , cnt ) ; // cnt for debug
 }

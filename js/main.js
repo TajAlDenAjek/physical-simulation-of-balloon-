@@ -22,12 +22,14 @@ document.body.appendChild(renderer.domElement);
 const controls = new MapControls(camera , renderer.domElement) ;
 	
 
+let cnt = 0 ; // debug
 
 function animate()
 {
 	// update controls
 	controls.update() ;
-	fullScene.objectsAnimations();
+	fullScene.objectsAnimations(cnt); // pass cnt for debug
+	cnt++ ; 						  // debug
  	requestAnimationFrame( animate );
  	renderer.render(scene,camera);
 }
