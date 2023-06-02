@@ -20,3 +20,4 @@ gui.add(ConfigOptions , 'WindVeloctiy' ) ;
 
 
 export default gui;
+export {ConfigOptions} ;
