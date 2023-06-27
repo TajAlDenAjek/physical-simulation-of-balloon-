@@ -5,6 +5,7 @@ import * as fullScene from './scene.js';
 import gui from './gui.js';
 import {MapControls} from 'three/examples/jsm/controls/MapControls' // import the camera controller
 
+const clock = new THREE.Clock(); // for calculating accelration and velocity
 
 const scene=fullScene.scene;
 
@@ -22,14 +23,14 @@ document.body.appendChild(renderer.domElement);
 const controls = new MapControls(camera , renderer.domElement) ;
 	
 
-let cnt = 0 ; // debug
+
 
 function animate()
 {
 	// update controls
 	controls.update() ;
-	fullScene.objectsAnimations(cnt); // pass cnt for debug
-	cnt++ ; 						  // debug
+	const timeElapsed = clock.getElapsedTime();
+	fullScene.objectsAnimations(timeElapsed); // pass cnt for debug
  	requestAnimationFrame( animate );
  	renderer.render(scene,camera);
 }
