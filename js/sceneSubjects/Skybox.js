@@ -33,6 +33,7 @@ class Skybox
         });
         const geometry = new THREE.BoxGeometry(this.size, this.size, this.size);
         this.skybox = new THREE.Mesh(geometry,materialArray);  
+        this.skybox.position.y += this.size / 2 - 2  ; // to make the ballon on the same level as ground (skybox) (2 is the half size of ballon)
     }
     Draw()
     {
