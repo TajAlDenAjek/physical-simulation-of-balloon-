@@ -41,8 +41,8 @@ class Skybox
     }
     AnimateSkyBox()
     {
-        this.skybox.rotation.x += this.RotationalSpeed;
         this.skybox.rotation.y += this.RotationalSpeed;
+        
     }
 }
 
