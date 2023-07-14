@@ -11,7 +11,8 @@ let ConfigOptions =
 	Raduis:15,
 	Fire:25,
 	WindVeloctiy:0 , 
-	AirTemprature:25
+	AirTemprature:25, 
+    WindDegree:0
 };
 let Constants = {
     PressureAtSeaLevel:101325 ,                                         // P0 , pasal
@@ -25,19 +26,19 @@ let Constants = {
     RadiusOfEarth: 6371000 ,                                            // r , meter
     Dragcoefficient: 0.47
 };
-gui.add(Constants 	, 'Gravity' ).min(0).step(5);
+gui.add(Constants 	, 'Gravity' ).min(0);
 gui.add(Constants   , 'PressureAtSeaLevel').min(1);
 gui.add(Constants   , 'MassOfEarth').min(1).step(1000);
 gui.add(Constants   , 'RadiusOfEarth').min(1);
 
 
 
-gui.add(ConfigOptions , 'Mass' ).min(2).max(2000).step(5);
+gui.add(ConfigOptions , 'Mass' ).min(1).max(2000) ;
 gui.add(ConfigOptions , 'Raduis').min(2);
-gui.add(ConfigOptions , 'Fire').min(2).max(100).step(5) ;//  what will happen if temprature too high
-gui.add(ConfigOptions , 'AirTemprature' ).min(2).max(60).step(5);
+gui.add(ConfigOptions , 'Fire').min(-100).max(100).step(5) ;
+gui.add(ConfigOptions , 'AirTemprature' ).min(-100).max(100).step(5);
 gui.add(ConfigOptions , 'WindVeloctiy' );
-
+gui.add(ConfigOptions ,  'WindDegree' ).min(0).max(360).step(5); 
 
 export default gui;
 export {ConfigOptions , Constants } ;
