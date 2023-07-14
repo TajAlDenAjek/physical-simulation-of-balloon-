@@ -12,7 +12,7 @@ var time = 0;
 const woodTexture = textureLoader.load('../assets/wood.jpg');
 
 function GravityForce(MassOfBallon, HeightOfBallon, Constants) {
-    console.log("HeightOfBallon : " + HeightOfBallon);
+    // console.log("HeightOfBallon : " + HeightOfBallon);
 
     // console.log(Constants.GravitationalConstant , Constants.MassOfEarth , Constants.RadiusOfEarth )  ;
     // console.log((Constants.GravitationalConstant * Constants.MassOfEarth * MassOfBallon ) , Math.pow(Constants.RadiusOfEarth + HeightOfBallon , 2) );
@@ -44,13 +44,13 @@ function BuoyancyForce(TempratureInsideBallon, TempratureOutsideBallon, RadiusOf
     let p_hot = AirDensity(HeightOfBallon, TempratureInsideBallon, Constants);
     let p_cold = AirDensity(HeightOfBallon, TempratureOutsideBallon, Constants);
     let VolumeOfAirInBallon = 4 / 3 * Math.PI * Math.pow(RadiusOfBallon, 3);
-    console.log("VolumeOfAirInBallon : " + VolumeOfAirInBallon);
+    // console.log("VolumeOfAirInBallon : " + VolumeOfAirInBallon);
     let buoyancyForce = VolumeOfAirInBallon * Constants.Gravity * ((p_cold - p_hot) / 1000); /// changed p_hot - p_cold to this
-    console.log("Constants.Gravity : " + Constants.Gravity);
-    console.log("p_cold : " + p_cold);
-    console.log("p_hot : " + p_hot);
-    console.log("TempratureOutsideBallon : " + TempratureOutsideBallon)
-    console.log("buoyancyForce : " + buoyancyForce);
+    // console.log("Constants.Gravity : " + Constants.Gravity);
+    // console.log("p_cold : " + p_cold);
+    // console.log("p_hot : " + p_hot);
+    // console.log("TempratureOutsideBallon : " + TempratureOutsideBallon)
+    // console.log("buoyancyForce : " + buoyancyForce);
     return buoyancyForce;
 }
 function WindForce(TempratureOutsideBallon, WindVelocity, Constants) {
@@ -63,22 +63,16 @@ function Accelration(BuoyancyForce, GravityForce, MassOfBallon) { // add wind sp
     return accelration;
 }
 function Velocity(lastVelocity, accelration, timeElapsed, lastTime) {
-
     return (lastVelocity + (accelration * (timeElapsed - lastTime)));
 }
 function ChangeInAxes(lastTime, currentVelocity, timeElapsed) {
     return ((timeElapsed - lastTime) * currentVelocity);
 }
 class Ballon {
-    constructor(scene, Width, MassOfBallon, HeightOfBallon, RadiusOfBallon, TempratureInsideBallon, PercentageOfFire, WindVelocity, Color) {
+    constructor(scene, Width , HeightOfBallon, Color) {
         this.scene = scene;
         this.Width = Width;
-        this.MassOfBallon = MassOfBallon;
-        this.HeightOfBallon = HeightOfBallon; // HeightOfBallon = HeightFromSea + distance from center of ballon to center of earth
-        this.RadiusOfBallon = RadiusOfBallon;
-        this.TempratureInsideBallon = TempratureInsideBallon;
-        this.PercentageOfFire = PercentageOfFire;
-        this.WindVelocity = WindVelocity;
+        this.HeightOfBallon = HeightOfBallon; // HeightOfBallon = HeightFromSea + distance from center of ballon to center of earth      
         this.Color = Color;
         const FullBallon = new THREE.Group();
         this.FullBallon = FullBallon;
@@ -108,7 +102,6 @@ class Ballon {
         this.DrawCabin();
         this.DrawBallon();
         this.scene.add(this.FullBallon);
-
     }
     AnimateBallon(ConfigOptions, timeElapsed, Constants) // it may be wrong because elapsed time should be calculated from one second to another or from the begining of the program ?
     {
@@ -118,22 +111,27 @@ class Ballon {
         let accelration = Accelration(buoyancyForce, gravityForce, ConfigOptions.Mass);
         let velocity = Velocity(this.lastVelocity, accelration, timeElapsed, this.lastTime);
         let change = ChangeInAxes(this.lastTime, velocity, timeElapsed);
-        // print variables on screen
-        if (timeElapsed < 15)
-            console.log(buoyancyForce, gravityForce, change, timeElapsed, this.lastTime, accelration);
-        console.log("this.FullBallon.position.y : " + this.FullBallon.position.y);
-        console.log(gravityForce);
-        console.log("accelration : " + accelration);
-        console.log("velocity : " + velocity);
-        console.log("change : " + change);
+        let changeOnXZ =ConfigOptions.WindVeloctiy / 100;
+        if(this.FullBallon.position.y > 0  ){
+            this.FullBallon.position.x += Math.cos(ConfigOptions.WindDegree)*changeOnXZ ;
+            this.FullBallon.position.z += Math.sin(ConfigOptions.WindDegree)*changeOnXZ;
+        }
+        // console.log("changeOnXZ" , changeOnXZ) ;
+        // console.log("WindDegree" , ConfigOptions.WindDegree) ;
+        // console.log("this.FullBallon.position.y : " + this.FullBallon.position.y);
+        // console.log("gravity: " , gravityForce);
+        // console.log("accelration : " + accelration);
+        // console.log("velocity : " + velocity);
+        // console.log("change : " + change);
         
+        change/= 100 ; 
         if(Math.abs(gravityForce - buoyancyForce) <= 75)
         {
             velocity = 0;
         }
         else if ((this.FullBallon.position.y += change) > 0 && (this.FullBallon.position.y += change) < 800) {
 
-            this.FullBallon.position.y += change/10;
+            this.FullBallon.position.y += change ;
         }
         else if ((this.FullBallon.position.y += change) <= 0)
         {
@@ -148,10 +146,7 @@ class Ballon {
             velocity = 0;
         }
 
-
-            this.lastTime = timeElapsed;
-
-
+        this.lastTime = timeElapsed;
         this.lastVelocity = velocity;
     }
 

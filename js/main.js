@@ -3,7 +3,7 @@ import WebGL from 'three/addons/capabilities/WebGL.js';
 
 import * as fullScene from './scene.js';
 import gui from './gui.js';
-import {MapControls} from 'three/examples/jsm/controls/MapControls' // import the camera controller
+import {TrackballControls} from 'three/examples/jsm/controls/TrackballControls.js' // import the camera controller
 
 const clock = new THREE.Clock(); // for calculating accelration and velocity
 
@@ -20,9 +20,24 @@ renderer.setSize(window.innerWidth,window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
 // init MapControls
-const controls = new MapControls(camera , renderer.domElement) ;
+const controls = new TrackballControls(camera , renderer.domElement) ;
 	
+/*
+	Left to do:
+		1. Camera Control
+		2. Making the Camera stick to the ballon ??
+		3. Ballon Model
+		4. Maybe changing the skybox 
+		4.5. the gravity shouldn't be entered from gui ( it should be calculated from mass of Eearth)
+		5. what if the speed of landing was too high ? (crash .. game over etc...)
+		6. what will happen if temprature is too high (will the ballon handle such a big tempreature )
+		check what will happen if:
+			1. Mass is zero
+			2. gravity is very small 
+			3. radius of ballon too small or too big	
+			4. air temprature is below zero (it is not flying !!) bug
 
+*/	
 
 
 function animate()
