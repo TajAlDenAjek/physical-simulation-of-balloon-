@@ -3,7 +3,7 @@ import WebGL from 'three/addons/capabilities/WebGL.js';
 
 import * as fullScene from './scene.js';
 import gui from './gui.js';
-import {TrackballControls} from 'three/examples/jsm/controls/TrackballControls.js' // import the camera controller
+import {MapControls} from 'three/examples/jsm/controls/MapControls.js' // import the camera controller
 
 const clock = new THREE.Clock(); // for calculating accelration and velocity
 
@@ -20,12 +20,12 @@ renderer.setSize(window.innerWidth,window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
 // init MapControls
-const controls = new TrackballControls(camera , renderer.domElement) ;
-	
+const controls = new MapControls(camera , renderer.domElement) ;
+
+
+
 /*
 	Left to do:
-		1. Camera Control
-		2. Making the Camera stick to the ballon ??
 		3. Ballon Model
 		4. Maybe changing the skybox 
 		4.5. the gravity shouldn't be entered from gui ( it should be calculated from mass of Eearth)
@@ -40,12 +40,77 @@ const controls = new TrackballControls(camera , renderer.domElement) ;
 */	
 
 
+// cursor 
+let cursor = {
+    x:0,
+    y:0
+};
+let key = ' ' ;
+let wheel = 0 ;
+// updating the cursor axis
+window.addEventListener( 'mousemove' , (event) =>{
+    cursor.x = event.clientX  / sizes.width - 0.5 ;
+    cursor.y = -(event.clientY / sizes.height - 0.5); 
+});
+window.addEventListener('keydown' , (event) =>{
+		key = event.key ;
+		console.log(key);
+});
+window.addEventListener( 'wheel' , (event)=>{
+	    wheel = event.wheelDelta; 
+		console.log(wheel) ;
+});
+function checkInside( Axis ){
+	let skyboxsize = 800 ;
+	if(Axis.y != undefined ){
+		return Axis.y > 0 && Axis.y < skyboxsize * 2.3; 
+	}
+	if(Axis.x != undefined ){
+		return Axis.x > -skyboxsize -200 && Axis.x < skyboxsize  + 200; 
+	}
+	if(Axis.z != undefined ){
+		return Axis.z > -skyboxsize -200 && Axis.z < skyboxsize + 200; 
+	}
+}
+function MoveCamera(){
+    let Movespeed = 20 ;
+	let x = camera.position.x ;
+	let y = camera.position.y ;
+	let z = camera.position.z ;
+    if(key === 'w'|| key == 'ArrowUp'){
+		if(checkInside({z: z - Movespeed}) )
+        	camera.position.z -= Movespeed ;
+    }
+    if(key == 'a'|| key == 'ArrowLeft' ){
+		if(checkInside({x: x - Movespeed}) )
+        	camera.position.x -= Movespeed ;
+    }
+    if(key == 'd'|| key == 'ArrowRight'){
+		if(checkInside({x: x + Movespeed}))
+        	camera.position.x += Movespeed ;
+    }
+    if(key == 's' || key == 'ArrowDown'){
+		if(checkInside({z: z + Movespeed}) )
+        	camera.position.z += Movespeed ;
+    }
+    if(wheel != 0){
+		if(checkInside({y: y + wheel / 120 * 5 }))
+        	camera.position.y += wheel / 120 * 5 ;
+    }
+    wheel = 0 ;
+    key = ' ';
+}
+
 function animate()
 {
 	// update controls
+	
+	// uncomment if you need to have more control on camera and comment updating cameara in scene.js
+	// MoveCamera() ;
+
 	controls.update() ;
 	const timeElapsed = clock.getElapsedTime();
-	fullScene.objectsAnimations(timeElapsed); // pass cnt for debug
+	fullScene.objectsAnimations(camera , timeElapsed); // pass cnt for debug
  	requestAnimationFrame( animate );
  	renderer.render(scene,camera);
 }

@@ -12,9 +12,13 @@ const CabinWidth = 3 ;
 const HeightOfBallon = 0 ; 
 const ballon = new Ballon(scene , CabinWidth , HeightOfBallon , 'white' ) ;
 
-export function objectsAnimations(timeElapsed) // cnt for debug
+
+export function objectsAnimations(camera , timeElapsed) // cnt for debug
 {
     skybox.AnimateSkyBox();
-    
     ballon.AnimateBallon(ConfigOptions , timeElapsed , Constants ) ; // cnt for debug
+    camera.position.x = ballon.FullBallon.position.x ;
+    camera.position.y = ballon.FullBallon.position.y ;
+    camera.position.z = ballon.FullBallon.position.z + 50;
+
 }
