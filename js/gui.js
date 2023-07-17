@@ -41,4 +41,5 @@ gui.add(ConfigOptions , 'WindVeloctiy' );
 gui.add(ConfigOptions ,  'WindDegree' ).min(0).max(360).step(5); 
 
 export default gui;
+
 export {ConfigOptions , Constants } ;

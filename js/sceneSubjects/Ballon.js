@@ -103,6 +103,18 @@ class Ballon {
         this.DrawBallon();
         this.scene.add(this.FullBallon);
     }
+    checkInside( Axis ){
+        let skyboxsize = 800 ;
+        if(Axis.y != undefined ){
+            return Axis.y > 0 && Axis.y < skyboxsize * 2.3; 
+        }
+        if(Axis.x != undefined ){
+            return Axis.x > -skyboxsize -200 && Axis.x < skyboxsize  + 200; 
+        }
+        if(Axis.z != undefined ){
+            return Axis.z > -skyboxsize -200 && Axis.z < skyboxsize + 200; 
+        }
+    }
     AnimateBallon(ConfigOptions, timeElapsed, Constants) // it may be wrong because elapsed time should be calculated from one second to another or from the begining of the program ?
     {
 
@@ -111,10 +123,19 @@ class Ballon {
         let accelration = Accelration(buoyancyForce, gravityForce, ConfigOptions.Mass);
         let velocity = Velocity(this.lastVelocity, accelration, timeElapsed, this.lastTime);
         let change = ChangeInAxes(this.lastTime, velocity, timeElapsed);
-        let changeOnXZ =ConfigOptions.WindVeloctiy / 100;
+
+        let x = this.FullBallon.position.x ;
+        let y = this.FullBallon.position.y ;
+        let z = this.FullBallon.position.z ;
+        
+        let changeOnXZ =ConfigOptions.WindVeloctiy / 10;
         if(this.FullBallon.position.y > 0  ){
-            this.FullBallon.position.x += Math.cos(ConfigOptions.WindDegree)*changeOnXZ ;
-            this.FullBallon.position.z += Math.sin(ConfigOptions.WindDegree)*changeOnXZ;
+            let ChangeOnX = Math.cos(ConfigOptions.WindDegree)*changeOnXZ ;
+            let ChangeOnZ = Math.sin(ConfigOptions.WindDegree)*changeOnXZ;
+            if(this.checkInside({x: x + ChangeOnX + this.Width/ 2  }) && this.checkInside({z: z + ChangeOnZ + this.Width /2})){
+                this.FullBallon.position.x += Math.cos(ConfigOptions.WindDegree)*changeOnXZ ;
+                this.FullBallon.position.z += Math.sin(ConfigOptions.WindDegree)*changeOnXZ;
+            }
         }
         // console.log("changeOnXZ" , changeOnXZ) ;
         // console.log("WindDegree" , ConfigOptions.WindDegree) ;
@@ -130,8 +151,8 @@ class Ballon {
             velocity = 0;
         }
         else if ((this.FullBallon.position.y += change) > 0 && (this.FullBallon.position.y += change) < 800) {
-
-            this.FullBallon.position.y += change ;
+            if(this.checkInside({y: y + change }))
+                this.FullBallon.position.y += change ;
         }
         else if ((this.FullBallon.position.y += change) <= 0)
         {
