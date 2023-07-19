@@ -35,8 +35,8 @@ gui.add(Constants   , 'RadiusOfEarth').min(1);
 
 gui.add(ConfigOptions , 'Mass' ).min(1).max(2000) ;
 gui.add(ConfigOptions , 'Raduis').min(2);
-gui.add(ConfigOptions , 'Fire').min(0).max(100).step(5) ;
-gui.add(ConfigOptions , 'AirTemprature' ).min(1).max(100).step(5);
+gui.add(ConfigOptions , 'Fire').min(1).max(100).step(1) ;
+gui.add(ConfigOptions , 'AirTemprature' ).min(1).max(100).step(1);
 gui.add(ConfigOptions , 'WindVeloctiy' );
 gui.add(ConfigOptions ,  'WindDegree' ).min(0).max(360).step(5); 
 
