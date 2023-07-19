@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import WebGL from 'three/addons/capabilities/WebGL.js';
 
 import * as fullScene from './scene.js';
-import gui from './gui.js';
+
 
 const clock = new THREE.Clock(); // for calculating accelration and velocity
 
@@ -56,7 +56,7 @@ window.addEventListener( 'mousemove' , (event) =>{
 });
 window.addEventListener( 'wheel' , (event)=>{
 	    wheel = event.wheelDelta ; 
-
+});
 window.addEventListener( 'wheel' , (event)=>{
 	    wheel = event.wheelDelta; 
 });
