@@ -56,13 +56,11 @@ window.addEventListener( 'mousemove' , (event) =>{
     cursor.x = event.clientX  / sizes.width - 0.5 ;
     cursor.y = -(event.clientY / sizes.height - 0.5); 
 });
-window.addEventListener('keydown' , (event) =>{
-		key = event.key ;
-		console.log(key);
-});
+// window.addEventListener('keydown' , (event) =>{
+// 		key = event.key ;
+// });
 window.addEventListener( 'wheel' , (event)=>{
-	    wheel = event.wheelDelta; 
-		console.log(wheel) ;
+	    wheel = event.wheelDelta ; 
 });
 function checkInside( Axis ){
 	let skyboxsize = 800 ;
@@ -87,7 +85,7 @@ function animate()
 	// controls.update() ;
 	
 	const timeElapsed = clock.getElapsedTime();
-	fullScene.objectsAnimations(camera , cursor , timeElapsed); // pass cnt for debug
+	fullScene.objectsAnimations(camera , cursor , wheel , timeElapsed); // pass cnt for debug
  	requestAnimationFrame( animate );
  	renderer.render(scene,camera);
 }

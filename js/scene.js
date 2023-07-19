@@ -13,11 +13,13 @@ const HeightOfBallon = 0 ;
 const ballon = new Ballon(scene , CabinWidth , HeightOfBallon , 'white' ) ;
 
 
-export function objectsAnimations(camera , cursor, timeElapsed) // cnt for debug
+export function objectsAnimations(camera , cursor, wheel , timeElapsed) // cnt for debug
 {
     camera.position.x = ballon.FullBallon.position.x +  Math.sin(cursor.x ) * 80 ;
-	camera.position.z = ballon.FullBallon.position.z +  Math.cos(cursor.x ) * 80 ;
+	camera.position.z = ballon.FullBallon.position.z +  Math.cos(cursor.x ) * 80 - wheel  ;
     camera.position.y = ballon.FullBallon.position.y +  Math.sin(cursor.y ) * 80 ;
+    
+
 	camera.lookAt(new THREE.Vector3(ballon.FullBallon.position.x , ballon.FullBallon.position.y , ballon.FullBallon.position.z )) ;
 
     skybox.AnimateSkyBox();
