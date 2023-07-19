@@ -7,13 +7,33 @@ import { ConfigOptions , Constants } from './gui'; // importing Configuration
 
 export const scene = new THREE.Scene();
 
-const skybox = new Skybox(scene,800,0.0000);
-// const ballon = new Ballon(scene , 3 , 3  , 3, 3 ,  3 , 3 , 3 , 'white');
-const ballon = new Ballon(scene , 3 , ConfigOptions.Mass , 0 , ConfigOptions.Raduis , ConfigOptions.Fire , ConfigOptions.Fire , ConfigOptions.WindVeloctiy , 'white') ;
+const skybox = new Skybox(scene,2000,0.0000);
+const CabinWidth = 3 ;
+const HeightOfBallon = 0 ; 
+const ballon = new Ballon(scene , CabinWidth , HeightOfBallon , 'white' ) ;
 
-export function objectsAnimations(timeElapsed) // cnt for debug
+
+export function objectsAnimations(camera , cursor, timeElapsed) // cnt for debug
 {
+    camera.position.x = ballon.FullBallon.position.x +  Math.sin(cursor.x ) * 80 ;
+	camera.position.z = ballon.FullBallon.position.z +  Math.cos(cursor.x ) * 80 ;
+    camera.position.y = ballon.FullBallon.position.y +  Math.sin(cursor.y ) * 80 ;
+	camera.lookAt(new THREE.Vector3(ballon.FullBallon.position.x , ballon.FullBallon.position.y , ballon.FullBallon.position.z )) ;
+
     skybox.AnimateSkyBox();
-    
+    let changeOnX = ballon.FullBallon.position.x ;
+    let changeOnY = ballon.FullBallon.position.y ;
+    let changeOnZ = ballon.FullBallon.position.z ;
     ballon.AnimateBallon(ConfigOptions , timeElapsed , Constants ) ; // cnt for debug
+    changeOnX-= ballon.FullBallon.position.x ; 
+    changeOnY-= ballon.FullBallon.position.y ; 
+    changeOnZ-= ballon.FullBallon.position.z ; 
+    changeOnX*= -1 ; 
+    changeOnY*= -1 ; 
+    changeOnZ*= -1 ; 
+    camera.position.x += changeOnX ;
+    camera.position.y += changeOnY ;
+    camera.position.z += changeOnZ ;
+    
+
 }
