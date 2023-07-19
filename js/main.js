@@ -13,6 +13,10 @@ camera.position.x = 10;
 camera.position.y = 10;
 camera.position.z = 10;
 
+// init light
+const ambientLight = new THREE.AmbientLight('white' , 0.75 ) ; // color , intensity
+scene.add(ambientLight);
+
 
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth,window.innerHeight);
