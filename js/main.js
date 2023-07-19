@@ -3,7 +3,6 @@ import WebGL from 'three/addons/capabilities/WebGL.js';
 
 import * as fullScene from './scene.js';
 import gui from './gui.js';
-// import {MapControls} from 'three/examples/jsm/controls/MapControls.js' // import the camera controller
 
 const clock = new THREE.Clock(); // for calculating accelration and velocity
 
@@ -18,9 +17,6 @@ camera.position.z = 10;
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth,window.innerHeight);
 document.body.appendChild(renderer.domElement);
-
-// init MapControls
-// const controls = new MapControls(camera , renderer.domElement) ;
 
 
 
@@ -41,10 +37,12 @@ document.body.appendChild(renderer.domElement);
 
 
 // cursor 
+
 let sizes = {
 	width:800 ,
 	height:800
 };
+
 let cursor = {
     x:0,
     y:0
@@ -56,11 +54,11 @@ window.addEventListener( 'mousemove' , (event) =>{
     cursor.x = event.clientX  / sizes.width - 0.5 ;
     cursor.y = -(event.clientY / sizes.height - 0.5); 
 });
-// window.addEventListener('keydown' , (event) =>{
-// 		key = event.key ;
-// });
 window.addEventListener( 'wheel' , (event)=>{
 	    wheel = event.wheelDelta ; 
+
+window.addEventListener( 'wheel' , (event)=>{
+	    wheel = event.wheelDelta; 
 });
 function checkInside( Axis ){
 	let skyboxsize = 800 ;
@@ -86,6 +84,8 @@ function animate()
 	
 	const timeElapsed = clock.getElapsedTime();
 	fullScene.objectsAnimations(camera , cursor , wheel , timeElapsed); // pass cnt for debug
+	
+
  	requestAnimationFrame( animate );
  	renderer.render(scene,camera);
 }

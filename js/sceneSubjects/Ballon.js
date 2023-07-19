@@ -65,6 +65,7 @@ function Accelration(BuoyancyForce, GravityForce, MassOfBallon) { // add wind sp
 function Velocity(lastVelocity, accelration, timeElapsed, lastTime) {
     return (lastVelocity + (accelration * (timeElapsed - lastTime)));   
 }
+  
 class Ballon {
     constructor(scene, Width , HeightOfBallon, Color) {
         this.scene = scene;
@@ -119,7 +120,6 @@ class Ballon {
         let gravityForce = GravityForce(ConfigOptions.Mass, this.FullBallon.position.y + 1, Constants);
         let accelration = Accelration(buoyancyForce, gravityForce, ConfigOptions.Mass);
         let velocity = Velocity(this.lastVelocity, accelration, timeElapsed, this.lastTime);
-        
         let x = this.FullBallon.position.x ;
         let y = this.FullBallon.position.y ;
         let z = this.FullBallon.position.z ;
@@ -141,6 +141,7 @@ class Ballon {
         // console.log("velocity : " + velocity);
         // console.log("change : " + change);
         
+
         let change = velocity / 100 ; 
         if(Math.abs(gravityForce - buoyancyForce) <= 75)
         {
@@ -159,6 +160,8 @@ class Ballon {
             this.FullBallon.position.y = 800;
             velocity = 0;
         }
+ 
+
         else{
             velocity = 0;
         }
