@@ -2,7 +2,8 @@ import * as THREE from 'three';
 import { Material } from 'three';
 import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
 import { FontLoader } from 'three/addons/loaders/FontLoader.js';
-
+import {OBJLoader} from 'three/addons/loaders/OBJLoader.js' ;
+import {MTLLoader} from 'three/addons/loaders/MTLLoader.js' ;
 
 const loadingManager = new THREE.LoadingManager();
 const textureLoader = new THREE.TextureLoader(loadingManager);
@@ -97,9 +98,30 @@ class Ballon {
         this.FullBallon.add(ballon);
     }
     Draw() {
-        this.DrawCabin();
-        this.DrawBallon();
-        this.scene.add(this.FullBallon);
+        // this.DrawCabin();
+        // this.DrawBallon();
+        const mtlloader= new MTLLoader() ; // initlizing material loader
+        const objloader = new OBJLoader() ; // initlizing OBJLoader
+        
+        mtlloader.load('../../assets/models/11809_Hot_air_balloon_l2.mtl', (mtl)=>{
+
+            // loading material
+            mtl.preload();
+            objloader.setMaterials(mtl) ;
+
+            // loading model
+            objloader.load('../../assets/models/11809_Hot_air_balloon_l2.obj', (FullBallon)=>{
+                this.FullBallon = FullBallon ;
+                let size = 0.01 ;
+                // resizing model
+                FullBallon.scale.set(size,size,size);
+                // rotating model
+                FullBallon.rotation.x = - Math.PI / 2 ;
+                // adding model to the scene
+                this.scene.add(FullBallon) ;
+            }) ;
+        });
+        
     }
     checkInside( Axis ){
         let skyboxsize = 800 ;
