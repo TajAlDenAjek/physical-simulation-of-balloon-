@@ -4,6 +4,7 @@ import WebGL from 'three/addons/capabilities/WebGL.js';
 import * as fullScene from './scene.js';
 
 
+
 const clock = new THREE.Clock(); // for calculating accelration and velocity
 
 const scene=fullScene.scene;
@@ -76,6 +77,11 @@ function checkInside( Axis ){
 		return Axis.z > -skyboxsize -200 && Axis.z < skyboxsize + 200; 
 	}
 }
+
+
+
+
+
 
 function animate()
 {
