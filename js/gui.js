@@ -10,9 +10,9 @@ let ConfigOptions =
 	Mass:100 , 
 	Raduis:5,
 	Fire:200 ,
-	WindVelocity:10 , 
+	WindVelocity:0 , 
 	AirTemprature:200, 
-    WindDegree:180,
+    WindDegree:0,
     fabricType:'Polyester'
 };
 let Constants = {
@@ -34,7 +34,6 @@ gui.add(Constants 	, 'Gravity' ).min(0);
 gui.add(Constants   , 'PressureAtSeaLevel').min(1);
 gui.add(Constants   , 'MassOfEarth').min(1).step(1000);
 gui.add(Constants   , 'RadiusOfEarth').min(1);
-
 
 
 gui.add(ConfigOptions , 'Mass' ).min(1).max(2000) ;

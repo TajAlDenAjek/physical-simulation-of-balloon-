@@ -83,9 +83,10 @@ function Velocity(lastVelocity, accelration, timeElapsed, lastTime) {
 }
 
 class Ballon {
-    constructor(scene, Width , HeightOfBallon, Color) {
+    constructor(scene, skyBoxSize, HeightOfBallon, Color) {
         this.scene = scene;
-        this.Width = Width;
+        this.skyBoxSize = skyBoxSize; 
+        this.Width = 3 ; 
         this.HeightOfBallon = HeightOfBallon; // HeightOfBallon = HeightFromSea + distance from center of ballon to center of earth      
         this.Color = Color;
         const FullBallon = new THREE.Group();
@@ -98,7 +99,6 @@ class Ballon {
         const mtlloader= new MTLLoader() ; // initlizing material loader
         const objloader = new OBJLoader() ; // initlizing OBJLoader
         mtlloader.load('../../assets/models/11809_Hot_air_balloon_l2.mtl', (mtl)=>{
-
             // loading material
             mtl.preload();
             objloader.setMaterials(mtl) ;
@@ -118,15 +118,16 @@ class Ballon {
         
     }
     checkInside( Axis ){
-        let skyboxsize = 800 ;
+        let skyBoxSize = this.skyBoxSize ;
+        console.log(skyBoxSize) ;
         if(Axis.y != undefined ){
-            return Axis.y > 0 && Axis.y < skyboxsize * 2.3; 
+            return Axis.y > 0 && Axis.y < skyBoxSize * 2.3; 
         }
         if(Axis.x != undefined ){
-            return Axis.x > -skyboxsize -200 && Axis.x < skyboxsize  + 200; 
+            return Axis.x > -skyBoxSize -200 && Axis.x < skyBoxSize  + 200; 
         }
         if(Axis.z != undefined ){
-            return Axis.z > -skyboxsize -200 && Axis.z < skyboxsize + 200; 
+            return Axis.z > -skyBoxSize -200 && Axis.z < skyBoxSize + 200; 
         }
     }
     
@@ -149,6 +150,7 @@ class Ballon {
         <br> Rotation Y: ${values.rotation.y}
         <br> Rotation Z: ${values.rotation.z}
         <br> Wind Degree: ${values.windDegree}
+        
         ` ;
 
     }
@@ -166,7 +168,10 @@ class Ballon {
     AnimateBallon(ConfigOptions, timeElapsed, Constants) 
     {
         let WindDegree = (ConfigOptions.WindDegree  ) * (Math.PI / 180.0) ; 
-
+        if(ConfigOptions.WindVelocity > 20 ) {
+            ConfigOptions.Fire = 1; 
+            this.FullBallon.rotation.y = -Math.PI/2 ;
+        }
         if( ConfigOptions.fabricType === 'Polyester' ){
             if(ConfigOptions.Fire > 550 ){
                 ConfigOptions.Fire = 1;
@@ -207,23 +212,27 @@ class Ballon {
                 this.FullBallon.position.x += Math.cos(WindDegree)*ChangeOnXZ ;
                 this.FullBallon.position.z += Math.sin(WindDegree)*ChangeOnXZ;
             }
-            
-            // if(ChangeOnX > 0 )
-            // {
-            //     this.FullBallon.rotation.y = Math.PI/4 ;
-            // }
-            // else if(ChangeOnX < 0 ){
+            let degree = Math.PI/8 * ChangeOnXZ/20 ;
+            if(ChangeOnX > 0 )
+            {
+                this.FullBallon.rotation.y = degree ;
+            }
+            else if(ChangeOnX < 0 ){
                 
-            //     this.FullBallon.rotation.y = -Math.PI/4 ;
-            // }
-            // if(ChangeOnZ > 0 ){
-            //     this.FullBallon.rotation.x = Math.PI /2 - Math.PI/4 ;
-            // }
-            // else if(ChangeOnZ < 0 ) {
-            //     this.FullBallon.rotation.x = Math.PI/ 2 + Math.PI /4   ;
-            // }
-            
+                this.FullBallon.rotation.y = -degree ;
+            }
+            if(ChangeOnZ > 0 ){
+                this.FullBallon.rotation.x =-1*( Math.PI /2 - degree );
+            }
+            else if(ChangeOnZ < 0 ) {
+                this.FullBallon.rotation.x =-1*( Math.PI/ 2 + degree ) ; 
+            }
+            if(Math.abs(ChangeOnX) <= 0.5 && Math.abs(ChangeOnZ) <= 0.5 ) {
+                this.FullBallon.rotation.x= - Math.PI / 2 ;
+                this.FullBallon.rotation.y= 0 ;
+            }
         }
+        
         let p_hot = AirDensity(this.FullBallon.position.y , ConfigOptions.Fire , Constants);
         let p_cold = AirDensity(this.FullBallon.position.y , ConfigOptions.AirTemprature , Constants);
         let volumeOfAirInBallon = VolumeOfAirInBallon(ConfigOptions.Raduis ) ; 
@@ -242,7 +251,8 @@ class Ballon {
             volume: volumeOfAirInBallon,
             airPressure: airPressure,
             rotation: this.FullBallon.rotation,
-            windDegree: WindDegree
+            windDegree: WindDegree,
+            skyBoxSize: this.skyBoxSize
         }
         this.Print_Values(Values);
         
