@@ -30,19 +30,22 @@ let Constants = {
     RadiusOfEarth: 6371000 ,                                            // r , meter
     Dragcoefficient: 0.47
 };
-gui.add(Constants 	, 'Gravity' ).min(0);
-gui.add(Constants   , 'PressureAtSeaLevel').min(1);
-gui.add(Constants   , 'MassOfEarth').min(1).step(1000);
-gui.add(Constants   , 'RadiusOfEarth').min(1);
+const Environment = gui.addFolder('Environment') ; 
+const Ballon = gui.addFolder('Ballon') ;
+Environment.add(Constants 	, 'Gravity' ).min(0);
+Environment.add(Constants   , 'PressureAtSeaLevel').min(1);
+Environment.add(Constants   , 'MassOfEarth').min(1).step(1000);
+Environment.add(Constants   , 'RadiusOfEarth').min(1);
+Environment.add(ConfigOptions , 'AirTemprature' ).min(1).max(1000).step(1);
+Environment.add(ConfigOptions , 'WindVelocity' );
+Environment.add(ConfigOptions ,  'WindDegree' ).min(0).max(360); 
 
 
-gui.add(ConfigOptions , 'Mass' ).min(1).max(2000) ;
-gui.add(ConfigOptions , 'Raduis').min(2);
-gui.add(ConfigOptions , 'Fire').min(1).max(1000).step(1) ;
-gui.add(ConfigOptions , 'AirTemprature' ).min(1).max(1000).step(1);
-gui.add(ConfigOptions , 'WindVelocity' );
-gui.add(ConfigOptions ,  'WindDegree' ).min(0).max(360); 
-gui.add(ConfigOptions , 'fabricType'  , ['Polyester' ,'Nylon']) ;
+Ballon.add(ConfigOptions , 'Mass' ).min(1).max(2000) ;
+Ballon.add(ConfigOptions , 'Raduis').min(2);
+Ballon.add(ConfigOptions , 'Fire').min(1).max(1000).step(1) ;
+Ballon.add(ConfigOptions , 'fabricType'  , ['Polyester' ,'Nylon']) ;
+
 export default gui;
 
 export {ConfigOptions , Constants } ;

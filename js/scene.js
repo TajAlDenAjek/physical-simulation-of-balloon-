@@ -7,7 +7,7 @@ import { ConfigOptions , Constants } from './gui'; // importing Configuration
 
 export const scene = new THREE.Scene();
 
-const skyBoxSize = 5000;
+const skyBoxSize = 10000;
 const skybox = new Skybox(scene,skyBoxSize,0.0000);
 const CabinWidth = 3 ;
 const HeightOfBallon = 0 ; 
